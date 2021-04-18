@@ -3,35 +3,35 @@
     <div class="container page">
       <div class="row">
         <div class="col-md-6 offset-md-3 col-xs-12">
-          <h1 class="text-xs-center">Sign Up</h1>
-          <p class="text-cs-center">
-            <router-link :to="{name: 'login'}">Need an account?</router-link>
+          <h1 class="text-xs-center">Sign up</h1>
+          <p class="text-xs-center">
+            <router-link :to="{name: 'login'}"> Need an account? </router-link>
           </p>
           <mcv-validation-errors
-            v-if="ValidationErrors"
-            :validation-errors="ValidationErrors"
-          />
+            v-if="validationErrors"
+            :validation-errors="validationErrors"
+          ></mcv-validation-errors>
           <form @submit.prevent="onSubmit">
             <fieldset class="form-group">
               <input
-                type="text"
                 class="form-control form-control-lg"
+                type="text"
                 placeholder="Username"
                 v-model="username"
               />
             </fieldset>
             <fieldset class="form-group">
               <input
-                type="email"
                 class="form-control form-control-lg"
+                type="text"
                 placeholder="Email"
                 v-model="email"
               />
             </fieldset>
             <fieldset class="form-group">
               <input
-                type="password"
                 class="form-control form-control-lg"
+                type="password"
                 placeholder="Password"
                 v-model="password"
               />
@@ -51,6 +51,7 @@
 
 <script>
 import McvValidationErrors from '@/components/ValidationErrors';
+
 export default {
   name: 'McvRegister',
   components: {
@@ -67,21 +68,20 @@ export default {
     isSubmitting() {
       return this.$store.state.auth.isSubmitting;
     },
-    ValidationErrors() {
-      return this.$store.state.validationErrors;
+    validationErrors() {
+      return this.$store.state.auth.validationErrors;
     },
   },
   methods: {
     onSubmit() {
-      console.log('text');
+      console.log('onSubmit');
       this.$store
         .dispatch('register', {
           email: this.email,
           username: this.username,
           password: this.password,
         })
-        .then((user) => {
-          console.log('successfully register user', user);
+        .then(() => {
           this.$router.push({name: 'home'});
         });
     },
