@@ -3,6 +3,7 @@ import {setItem} from '@/helpers/persistanceStorage';
 
 const state = {
   isSubmitting: false,
+  isLoading: false,
   currentUser: null,
   validationErrors: null,
   isLoggedIn: null,
@@ -18,11 +19,35 @@ export const mutationTypes = {
   loginStart: '[auth] loginStart',
   loginSuccess: '[auth] loginSuccess',
   loginFailure: '[auth] loginFailure',
+
+  /* ----- GetCurrentUser -----*/
+  getCurrentUserStart: '[auth] getCurrentUserStart',
+  getCurrentUserSuccess: '[auth] getCurrentUserSuccess',
+  getCurrentUserFailure: '[auth] getCurrentUserFailure',
 };
 
 export const actionTypes = {
   register: '[auth] register',
   login: '[auth] login',
+  getCurrentUser: '[auth] getCurrentUser',
+};
+
+export const getterTypes = {
+  currentUser: '[auth] currentUser',
+  isLoggedIn: '[auth] isLoggedIn',
+  isAnonymous: '[auth] isAnonymous',
+};
+
+const getters = {
+  [getterTypes.currentUser]: (state) => {
+    return state.currentUser;
+  },
+  [getterTypes.isLoggedIn]: (state) => {
+    return Boolean(state.isLoggedIn);
+  },
+  [getterTypes.isAnonymous]: (state) => {
+    return state.isLoggedIn === false;
+  },
 };
 
 const mutations = {
@@ -54,6 +79,21 @@ const mutations = {
   [mutationTypes.loginFailure](state, payload) {
     state.isSubmitting = false;
     state.validationErrors = payload;
+  },
+
+  /* ------ getCurrentUser ---- */
+  [mutationTypes.getCurrentUserStart](state) {
+    state.isLoading = true;
+  },
+  [mutationTypes.getCurrentUserSuccess](state, payload) {
+    state.isLoading = false;
+    state.currentUser = payload;
+    state.isLoggedIn = true;
+  },
+  [mutationTypes.getCurrentUserFailure](state) {
+    state.isLoading = false;
+    state.isLoggedIn = false;
+    state.currentUser = null;
   },
 };
 
@@ -99,10 +139,31 @@ const actions = {
         });
     });
   },
+
+  /* ----- getCurrentUser -----*/
+  [actionTypes.getCurrentUser](context) {
+    return new Promise((resolve) => {
+      context.commit(mutationTypes.getCurrentUserStart);
+      authApi
+        .getCurrentUser()
+        .then((response) => {
+          console.log('response', response);
+          context.commit(
+            mutationTypes.getCurrentUserSuccess,
+            response.data.user
+          );
+          resolve(response.data.user);
+        })
+        .catch(() => {
+          context.commit(mutationTypes.getCurrentUserFailure);
+        });
+    });
+  },
 };
 
 export default {
   state,
   mutations,
   actions,
+  getters,
 };
