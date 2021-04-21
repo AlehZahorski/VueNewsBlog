@@ -1,6 +1,6 @@
 <template>
   <div class="home-page">
-    BANNER
+    <mcv-banner />
     <div class="container page">
       <div class="row">
         <div class="col-md-9">
@@ -17,9 +17,11 @@
 <script>
 import McvFeed from '@/components/Feed.vue';
 import McvPopularTags from '@/components/PopularTags';
+import McvBanner from '@/components/Banner';
 export default {
   name: 'McvGlobalFeed',
   components: {
+    McvBanner,
     McvPopularTags,
     McvFeed,
   },
