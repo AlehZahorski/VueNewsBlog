@@ -21,7 +21,7 @@ import McvPopularTags from '@/components/PopularTags';
 import McvBanner from '@/components/Banner';
 import McvFeedToggle from '@/components/FeedToggle';
 export default {
-  name: 'McvGlobalFeed',
+  name: 'McvYourFeed',
   components: {
     McvFeedToggle,
     McvBanner,
@@ -30,7 +30,7 @@ export default {
   },
   data() {
     return {
-      apiUrl: '/articles',
+      apiUrl: '/articles/feed',
     };
   },
 };

@@ -1,9 +1,11 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import GlobalFeed from '../views/GlobalFeed';
-import Register from '@/views/Register';
-import Login from '@/views/Login';
-import Feed from '@/components/Feed';
+
+import GlobalFeed from '@/views/GlobalFeed.vue';
+import YourFeed from '@/views/YourFeed.vue';
+import TagFeed from '@/views/TagFeed.vue';
+import Register from '@/views/Register.vue';
+import Login from '@/views/Login.vue';
 
 Vue.use(VueRouter);
 
@@ -25,43 +27,43 @@ const routes = [
   },
   {
     path: '/feed',
-    name: 'feed',
-    component: Feed,
+    name: 'yourFeed',
+    component: YourFeed,
   },
   {
     path: '/tags/:slug',
     name: 'tag',
-    component: Feed,
+    component: TagFeed,
   },
   {
     path: '/articles/new',
     name: 'createArticle',
-    component: Feed,
+    component: GlobalFeed,
   },
   {
-    path: '/article/:slug',
+    path: '/articles/:slug',
     name: 'article',
-    component: Feed,
+    component: GlobalFeed,
   },
   {
-    path: '/article/:slug/edit',
+    path: '/articles/:slug/edit',
     name: 'editArticle',
-    component: Feed,
+    component: GlobalFeed,
   },
   {
     path: '/settings',
     name: 'settings',
-    component: Feed,
+    component: GlobalFeed,
   },
   {
     path: '/profiles/:slug',
     name: 'userProfile',
-    component: Feed,
+    component: GlobalFeed,
   },
   {
     path: '/profiles/:slug/favorites',
     name: 'userProfileFavorites',
-    component: Feed,
+    component: GlobalFeed,
   },
 ];
 
