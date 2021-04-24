@@ -7,13 +7,13 @@ const state = {
 };
 
 export const mutationTypes = {
-  getPopularTagsStart: '[popularTags] Get popular tags start',
-  getPopularTagsSuccess: '[popularTags] Get popular tags success',
-  getPopularTagsFailure: '[popularTags] Get popular tags failure',
+  getPopularTagsStart: '[popularTags] getPopularTagsStart',
+  getPopularTagsSuccess: '[popularTags] getPopularTagsSuccess',
+  getPopularTagsFailure: '[popularTags] getPopularTagsFailure',
 };
 
 export const actionTypes = {
-  getPopularTags: '[popularTags] Get popular tags',
+  getPopularTags: '[popularTags] getPopularTags',
 };
 
 const mutations = {

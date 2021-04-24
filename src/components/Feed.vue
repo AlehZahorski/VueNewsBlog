@@ -26,7 +26,13 @@
             </router-link>
             <span class="date">{{ article.createdAt }}</span>
           </div>
-          <div class="pull-xs-right">ADD TO FAVORITES</div>
+          <div class="pull-xs-right">
+            <mcv-add-to-favorites
+              :is-favorited="article.favorited"
+              :article-slug="article.slug"
+              :favorites-count="article.favoritesCount"
+            ></mcv-add-to-favorites>
+          </div>
         </div>
         <router-link
           :to="{name: 'article', params: {slug: article.slug}}"
@@ -41,43 +47,39 @@
       <mcv-pagination
         :total="feed.articlesCount"
         :limit="limit"
-        :current-page="currentPage"
         :url="baseUrl"
-      />
+        :current-page="currentPage"
+      ></mcv-pagination>
     </div>
   </div>
 </template>
 
 <script>
 import {mapState} from 'vuex';
+import {stringify, parseUrl} from 'query-string';
 
 import {actionTypes} from '@/store/modules/feed';
 import McvPagination from '@/components/Pagination';
 import {limit} from '@/helpers/vars';
-import {stringify, parseUrl} from 'query-string';
-import McvErrorMessage from '@/components/ErrorMessage';
 import McvLoading from '@/components/Loading';
+import McvErrorMessage from '@/components/ErrorMessage';
 import McvTagList from '@/components/TagList';
+import McvAddToFavorites from '@/components/AddToFavorites';
 
 export default {
   name: 'McvFeed',
+  components: {
+    McvPagination,
+    McvLoading,
+    McvErrorMessage,
+    McvTagList,
+    McvAddToFavorites,
+  },
   props: {
     apiUrl: {
       type: String,
       required: true,
     },
-  },
-  components: {
-    McvTagList,
-    McvLoading,
-    McvErrorMessage,
-    McvPagination,
-  },
-  data() {
-    return {
-      limit,
-      url: '/',
-    };
   },
   computed: {
     ...mapState({
@@ -85,11 +87,14 @@ export default {
       feed: (state) => state.feed.data,
       error: (state) => state.feed.error,
     }),
-    currentPage() {
-      return Number(this.$route.query.page || '1');
+    limit() {
+      return limit;
     },
     baseUrl() {
       return this.$route.path;
+    },
+    currentPage() {
+      return Number(this.$route.query.page || '1');
     },
     offset() {
       return this.currentPage * limit - limit;
@@ -97,6 +102,9 @@ export default {
   },
   watch: {
     currentPage() {
+      this.fetchFeed();
+    },
+    apiUrl() {
       this.fetchFeed();
     },
   },
@@ -112,7 +120,6 @@ export default {
         ...parsedUrl.query,
       });
       const apiUrlWithParams = `${parsedUrl.url}?${stringifiedParams}`;
-      console.log(apiUrlWithParams);
       this.$store.dispatch(actionTypes.getFeed, {apiUrl: apiUrlWithParams});
     },
   },
